@@ -41,14 +41,14 @@ public class CorrectProofChecker{
     }
 
     private boolean isMp(Expression expression) throws IOException {
-        for (int i = 0; i < approved.size(); i++){
+        for (int i = approved.size() - 1; i >= 0; i--){
             if (approved.elementAt(i).getOperator() == '-'){
                 if (approved.elementAt(i).getOperands(2).isEqual(expression)){
-                    for (int j = 0; j < approved.size(); j++){
+                    for (int j = approved.size() - 1; j >= 0; j--){
                         if (j != i){
                             if (approved.elementAt(j).isEqual(approved.elementAt(i).getOperands(1))){
-                                writer.write("(" + Integer.toString(lineNumber) + ") " + line + " (M.P. " + Integer.toString(i + 1) +
-                                    ", " + Integer.toString(j + 1) + ")\n");
+                                writer.write("(" + Integer.toString(lineNumber) + ") " + line + " (M.P. " + Integer.toString(j + 1) +
+                                    ", " + Integer.toString(i + 1) + ")\n");
                                 return true;
                             }
                         }
