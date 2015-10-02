@@ -4,7 +4,9 @@ public interface Expression {
 
     public char getOperator();
 
-    public boolean isEqual(Expression expression);
+    public boolean equals(Expression expression);
 
     public Expression getOperands(int number);
+
+    public String toString();
 }

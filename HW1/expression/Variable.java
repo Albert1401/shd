@@ -16,7 +16,7 @@ public class Variable implements Expression {
         return name;
     }
 
-    public boolean isEqual(Expression expression) {
+    public boolean equals(Expression expression) {
         if (expression.getOperator() == 'v') {
             if (name.equals(((Variable) expression).name)){
                 return true;

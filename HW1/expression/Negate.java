@@ -18,12 +18,16 @@ public class Negate implements Expression {
         return '!';
     }
 
-    public boolean isEqual(Expression expression){
+    public boolean equals(Expression expression){
         if (operator == expression.getOperator()) {
-            if (operation1.isEqual(expression.getOperands(0))) {
+            if (operation1.equals(expression.getOperands(0))) {
                 return true;
             }
         }
         return false;
+    }
+
+    public String toString(){
+        return "!(" + operation1.toString() + ")";
     }
 }

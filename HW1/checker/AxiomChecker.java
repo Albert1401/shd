@@ -28,7 +28,7 @@ public class AxiomChecker {
             } else {
                 int index = namesVector.indexOf(((Variable) Axiom).getName());
                 if (index != -1) {
-                    if (expressionsVector.elementAt(index).isEqual(expression)) {
+                    if (expressionsVector.elementAt(index).equals(expression)) {
                         return;
                     }
                 }

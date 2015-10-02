@@ -22,12 +22,16 @@ public abstract class AbstractBinOperation implements Expression {
         return operation2;
     }
 
-    public boolean isEqual(Expression expression){
+    public boolean equals(Expression expression){
         if (operator == expression.getOperator()){
-            if (this.operation1.isEqual(expression.getOperands(1)) &&
-                    this.operation2.isEqual(expression.getOperands(2)))
+            if (this.operation1.equals(expression.getOperands(1)) &&
+                    this.operation2.equals(expression.getOperands(2)))
                 return true;
         }
         return false;
+    }
+
+    public String toString(){
+        return "(" + operation1.toString() + operator + operation2.toString() + ")";
     }
 }
