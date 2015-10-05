@@ -10,9 +10,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.Vector;
 
-/**
- * Created by ClitCommander on 9/28/2015.
- */
+
 
 public class CorrectProofChecker{
     private Vector<Expression> assumptions = new Vector<>();
@@ -57,7 +55,7 @@ public class CorrectProofChecker{
                 }
             }
         }
-        writer.write("(" + Integer.toString(lineNumber) + ") " + line + "( He dokazano)\n");
+        writer.write("(" + Integer.toString(lineNumber) + ") " + line + "( Not approved)\n");
         return false;
     }
 
@@ -70,10 +68,9 @@ public class CorrectProofChecker{
         return -1;
     }
 
-    public boolean check() throws IOException {
-        boolean answer = true;
-        lineNumber = 1;
-        line = reader.readLine();
+    private void readAssumptions() throws IOException {
+        String line = reader.readLine();
+        writer.write("Task: " + line + '\n');
         for (int l = 0, r = 0; r < line.length(); r++) {
             if (line.charAt(r) == ',') {
                 assumptions.add(parser.parse(line.substring(l, r)));
@@ -86,23 +83,31 @@ public class CorrectProofChecker{
                 toProve = parser.parse(line.substring(r + 2));
             }
         }
+    }
+
+    public boolean check() throws IOException {
+        readAssumptions();
+        boolean answer = false;
+        lineNumber = 1;
         while ((line = reader.readLine()) != null){
             Expression expression = parser.parse(line);
             int isAxiom = axiomChecker.isAxiom(expression);
             int isAssumption = isAssumption(expression);
             if (isAxiom == -1 && isAssumption == -1){
                 if (isMp(expression)){
+                    if (toProve.equals(expression)) answer = true;
                     approved.add(expression);
                 } else {
                     answer = false;
                 }
             } else {
                 if (isAssumption == -1) {
-                    writer.write("(" + Integer.toString(lineNumber) + ") " + line + " (Cx. akc. " + Integer.toString(isAxiom + 1) + ")\n");
+                    writer.write("(" + Integer.toString(lineNumber) + ") " + line + " (Axiom scheme " + Integer.toString(isAxiom + 1) + ")\n");
                 } else {
                     writer.write("(" + Integer.toString(lineNumber) + ") " + line + " (Assumption " + Integer.toString(isAssumption + 1) + ")\n");
                 }
-                    approved.add(expression);
+                if (toProve.equals(expression)) answer = true;
+                approved.add(expression);
             }
             lineNumber++;
         }
