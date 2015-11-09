@@ -8,13 +8,13 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.Vector;
-
+import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class CorrectProofChecker{
-    private Vector<Expression> assumptions = new Vector<>();
-    private Vector<Expression> approved = new Vector<>();
+    private ArrayList<Expression> assumptions = new ArrayList<>();
+    private ArrayList<Expression> approved = new ArrayList<>();
     private ExpressionParser parser = new ExpressionParser();
     private AxiomChecker axiomChecker;
     private Expression toProve;
@@ -26,26 +26,18 @@ public class CorrectProofChecker{
     protected int lineNumber;
 
     public CorrectProofChecker(String pathToAxioms, String pathToProof) throws IOException {
-        try {
-            reader = new BufferedReader(new FileReader(pathToProof), 8 * 1024);
-        } catch (IOException e) {
-            System.out.println("Couldn't find test file");
-        }
-        try {
-            axiomChecker = new AxiomChecker(pathToAxioms);
-        } catch (IOException e){
-            System.out.println("Couldn't find axioms file. \"axioms.txt\" must be in same directory");
-        }
+        axiomChecker = new AxiomChecker(pathToAxioms);
+        reader = new BufferedReader(new FileReader(pathToProof), 8 * 1024);
         writer = new BufferedWriter(new FileWriter(pathToProof + ".log"));
     }
 
     private boolean isMp(Expression expression) throws IOException {
         for (int i = approved.size() - 1; i >= 0; i--){
-            if (approved.elementAt(i).getOperator() == '-'){
-                if (approved.elementAt(i).getOperands(2).equals(expression)){
+            if (approved.get(i).getOperator() == '-'){
+                if (approved.get(i).getOperands(2).equals(expression)){
                     for (int j = approved.size() - 1; j >= 0; j--){
                         if (j != i){
-                            if (approved.elementAt(j).equals(approved.elementAt(i).getOperands(1))){
+                            if (approved.get(j).equals(approved.get(i).getOperands(1))){
                                 writer.write("(" + Integer.toString(lineNumber) + ") " + line + " (M.P. " + Integer.toString(j + 1) +
                                     ", " + Integer.toString(i + 1) + ")\n");
                                 return true;
@@ -61,7 +53,7 @@ public class CorrectProofChecker{
 
     private int isAssumption(Expression expression){
         for (int i = 0; i < assumptions.size(); i++){
-            if (expression.equals(assumptions.elementAt(i))){
+            if (expression.equals(assumptions.get(i))){
                 return i;
             }
         }
@@ -69,20 +61,13 @@ public class CorrectProofChecker{
     }
 
     private void readAssumptions() throws IOException {
-        String line = reader.readLine();
-        writer.write("Task: " + line + '\n');
-        for (int l = 0, r = 0; r < line.length(); r++) {
-            if (line.charAt(r) == ',') {
-                assumptions.add(parser.parse(line.substring(l, r)));
-                l = r + 1;
-            }
-            if (line.charAt(r) == '|' && line.charAt(r + 1) == '-') {
-                if (r != 0) {
-                    assumptions.add(parser.parse(line.substring(l, r)));
-                }
-                toProve = parser.parse(line.substring(r + 2));
-            }
+        Scanner scanner = new Scanner(reader.readLine());
+        scanner.useDelimiter(",|\\|\\-");
+
+        while (scanner.hasNext()){
+            assumptions.add(parser.parse(scanner.next()));
         }
+        toProve = assumptions.remove(assumptions.size() - 1);
     }
 
     public boolean check() throws IOException {

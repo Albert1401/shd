@@ -8,7 +8,7 @@ public class Main {
             System.out.println("Enter path to test file");
         } else {
             CorrectProofChecker proofChecker = new CorrectProofChecker("axioms.txt", args[0]);
-            System.out.print(proofChecker.check());
+            System.out.print(proofChecker.check() ? "Expression proved" : "Expression not proved");
         }
     }
 }

@@ -7,15 +7,14 @@ import expression.Variable;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class AxiomChecker {
 
-    private final int length = 10;
-    private Expression Axioms[] = new Expression[length];
+    private ArrayList<Expression> Axioms = new ArrayList<>();
+    private ArrayList<String> namesVector = new ArrayList<>();
+    private ArrayList<Expression> expressionsVector = new ArrayList<>();
 
-    private Vector<String> namesVector = new Vector<>();
-    private Vector<Expression> expressionsVector = new Vector<>();
     private boolean isOk = true;
 
     private void dfs(Expression Axiom, Expression expression) {
@@ -28,7 +27,7 @@ public class AxiomChecker {
             } else {
                 int index = namesVector.indexOf(((Variable) Axiom).getName());
                 if (index != -1) {
-                    if (expressionsVector.elementAt(index).equals(expression)) {
+                    if (expressionsVector.get(index).equals(expression)) {
                         return;
                     }
                 }
@@ -38,7 +37,6 @@ public class AxiomChecker {
         }
         if (Axiom.getOperator() != expression.getOperator()){
             isOk = false;
-            return;
         } else {
             if (Axiom.getOperator() == '!') {
                 dfs(Axiom.getOperands(0), expression.getOperands(0));
@@ -51,7 +49,7 @@ public class AxiomChecker {
 
     private boolean is(int AxiomIndex, Expression expression){
         isOk = true;
-        dfs(Axioms[AxiomIndex], expression);
+        dfs(Axioms.get(AxiomIndex), expression);
         namesVector.clear();
         expressionsVector.clear();
         return isOk;
@@ -60,14 +58,15 @@ public class AxiomChecker {
     public AxiomChecker(String pathToAxioms) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(pathToAxioms));
         ExpressionParser parser = new ExpressionParser();
+
         String line;
-        for (int i = 0;(line = reader.readLine()) != null; i++){
-            Axioms[i] = parser.parse(line);
+        while ((line = reader.readLine()) != null){
+            Axioms.add(parser.parse(line));
         }
     }
 
     public int isAxiom(Expression expression){
-        for (int i = 0; i < Axioms.length; i++){
+        for (int i = 0; i < Axioms.size(); i++){
             if (is(i, expression)){
                 return i;
             }
