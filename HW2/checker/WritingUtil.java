@@ -1,18 +1,17 @@
 package checker;
 
-import expression.Expression;
-import expression.ExpressionParser;
+import expression.*;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class WritingUtil {
     private ExpressionParser parser = new ExpressionParser();
     private Expression mainAssumption;
     private BufferedWriter writer;
 
-    private Vector<Expression> expressionsToPrint = new Vector<>();
+    private ArrayList<Expression> expressionsToPrint = new ArrayList<>();
 
     public WritingUtil(BufferedWriter writer, Expression mainAssumption) {
         this.writer = writer;
@@ -36,51 +35,55 @@ public class WritingUtil {
         expressionsToPrint.add(parser.parse("A->C"));
     }
 
-    private void writingUtil(Expression expression, Vector<String> namesVector, Vector<Expression> expressionsVector) throws IOException {
+    private Expression writingUtil(Expression expression, ArrayList<String> namesVector, ArrayList<Expression> expressionsVector) throws IOException {
         if (expression.getOperator() == 'v'){
-            writer.write("(" + expressionsVector.elementAt(namesVector.indexOf(expression.toString())).toString() + ")");
+            return expressionsVector.get(namesVector.indexOf(expression.toString()));
         } else {
             if (expression.getOperator() == '!'){
-                writingUtil(expression.getOperands(0), namesVector, expressionsVector);
+                return new Negate(writingUtil(expression.getOperands(0), namesVector, expressionsVector));
             } else {
-                writer.write("(");
-                writingUtil(expression.getOperands(1), namesVector, expressionsVector);
-                writer.write((String)(expression.getOperator() == '-' ? "->" : expression.getOperator()));
-                writingUtil(expression.getOperands(2), namesVector, expressionsVector);
-                writer.write(")");
+                switch (expression.getOperator()) {
+                    case '&':
+                        return new Conjunction(writingUtil(expression.getOperands(1), namesVector, expressionsVector), writingUtil(expression.getOperands(2), namesVector, expressionsVector));
+                    case '|':
+                        return new Disjunction(writingUtil(expression.getOperands(1), namesVector, expressionsVector), writingUtil(expression.getOperands(2), namesVector, expressionsVector));
+                    case '-':
+                        return new Implication(writingUtil(expression.getOperands(1), namesVector, expressionsVector), writingUtil(expression.getOperands(2), namesVector, expressionsVector));
+                }
             }
         }
+        return null;
     }
 
     public void forAxiomsAndAssumptions(Expression expression) throws IOException {
-        Vector<String> namesVector = new Vector<>();
-        Vector<Expression> expressionsVector = new Vector<>();
+        ArrayList<String> namesVector = new ArrayList<>();
+        ArrayList<Expression> expressionsVector = new ArrayList<>();
         namesVector.add("A");
         expressionsVector.add(expression);
         namesVector.add("B");
         expressionsVector.add(mainAssumption);
 
         for (int i = 0; i < 3; i++){
-            writingUtil(expressionsToPrint.elementAt(i), namesVector, expressionsVector);
+            writer.write(writingUtil(expressionsToPrint.get(i), namesVector, expressionsVector).toString());
             writer.write('\n');
         }
     }
 
     public void forMainAssumption() throws IOException {
-        Vector<String> namesVector = new Vector<>();
-        Vector<Expression> expressionsVector = new Vector<>();
+        ArrayList<String> namesVector = new ArrayList<>();
+        ArrayList<Expression> expressionsVector = new ArrayList<>();
         namesVector.add("A");
         expressionsVector.add(mainAssumption);
 
         for (int i = 3; i < 8; i++){
-            writingUtil(expressionsToPrint.elementAt(i), namesVector, expressionsVector);
+            writer.write(writingUtil(expressionsToPrint.get(i), namesVector, expressionsVector).toString());
             writer.write('\n');
         }
     }
 
     public void forMP(Expression exprLeft, Expression exprRight) throws IOException {
-        Vector<String> namesVector = new Vector<>();
-        Vector<Expression> expressionsVector = new Vector<>();
+        ArrayList<String> namesVector = new ArrayList<>();
+        ArrayList<Expression> expressionsVector = new ArrayList<>();
         namesVector.add("A");
         expressionsVector.add(mainAssumption);
         namesVector.add("B");
@@ -89,7 +92,7 @@ public class WritingUtil {
         expressionsVector.add(exprRight);
 
         for (int i = 8; i < 12; i++){
-            writingUtil(expressionsToPrint.elementAt(i), namesVector, expressionsVector);
+            writer.write(writingUtil(expressionsToPrint.get(i), namesVector, expressionsVector).toString());
             writer.write('\n');
         }
     }
