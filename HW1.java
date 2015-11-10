@@ -2,7 +2,7 @@ import checker.CorrectProofChecker;
 
 import java.io.IOException;
 
-public class Main {
+public class HW1 {
     public static void main(String[] args) throws IOException {
         if (args.length == 0) {
             System.out.println("Enter path to test file");
