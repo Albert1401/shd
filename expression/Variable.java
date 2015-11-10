@@ -12,10 +12,6 @@ public class Variable implements Expression {
         return 'v';
     }
 
-    public String toString(){
-        return name;
-    }
-
     public boolean equals(Expression expression) {
         if (expression.getOperator() == 'v') {
             if (name.equals(((Variable) expression).name)){
@@ -27,5 +23,10 @@ public class Variable implements Expression {
 
     public Expression getOperands(int number) {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

@@ -16,7 +16,7 @@ import java.util.Vector;
  * Created by ClitCommander on 9/28/2015.
  */
 
-public class CorrectProofChecker {
+public class ProofChanger {
     private ArrayList<Expression> assumptions = new ArrayList<>();
     private ArrayList<Expression> approved = new ArrayList<>();
     private ExpressionParser parser = new ExpressionParser();
@@ -31,7 +31,7 @@ public class CorrectProofChecker {
     private BufferedReader reader;
     private BufferedWriter writer;
 
-    public CorrectProofChecker(String pathToAxioms, String pathToProof) throws IOException {
+    public ProofChanger(String pathToAxioms, String pathToProof) throws IOException {
         axiomChecker = new AxiomChecker(pathToAxioms);
         reader = new BufferedReader(new FileReader(pathToProof), 8 * 1024);
         writer = new BufferedWriter(new FileWriter(pathToProof + ".log"));

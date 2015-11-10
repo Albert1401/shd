@@ -1,14 +1,14 @@
-import checker.CorrectProofChecker;
+import checker.ProofChanger;
 
 import java.io.IOException;
 
-public class Main {
+public class HW2 {
     public static void main(String[] args) throws IOException {
         if (args.length == 0) {
             System.out.println("Enter path to test file");
         } else {
-            CorrectProofChecker proofChecker = new CorrectProofChecker("axioms.txt", args[0]);
-            proofChecker.change();
+            ProofChanger proofChanger = new ProofChanger("axioms.txt", args[0]);
+            proofChanger.change();
         }
     }
 }
