@@ -82,7 +82,7 @@ public class ProofChanger {
             if (i != 0) writer.write(", ");
             writer.write(assumptions.get(i).toString());
         }
-        writer.write("|-" + mainAssumption + "->" + toProve + '\n');
+        writer.write("|-(" + mainAssumption + ")->" + toProve + '\n');
     }
 
     public void change() throws IOException {
