@@ -28,6 +28,9 @@ public class Negate implements Expression {
     }
 
     public String toString(){
+        if (this.operation1.getOperator() == 'v'){
+            return "!" + operation1.toString();
+        }
         return "!(" + operation1.toString() + ")";
     }
 }

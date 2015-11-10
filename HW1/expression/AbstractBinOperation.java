@@ -32,6 +32,10 @@ public abstract class AbstractBinOperation implements Expression {
     }
 
     public String toString(){
-        return "(" + operation1.toString() + operator + operation2.toString() + ")";
+        boolean is1var = operation1.getOperator() == 'v' || operation1.getOperator() == '!';
+        boolean is2var = operation2.getOperator() == 'v' || operation2.getOperator() == '!';
+        return (is1var ? "" : "(") + operation1.toString() + (is1var ? "" : ")") +
+                (operator == '-' ? "->" : operator) +
+                (is2var ? "" : "(") + operation2.toString() + (is2var ? "" : ")");
     }
 }

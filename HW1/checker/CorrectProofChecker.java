@@ -70,8 +70,17 @@ public class CorrectProofChecker{
         toProve = assumptions.remove(assumptions.size() - 1);
     }
 
+    public void writeAssumptions() throws IOException{
+        for (int i = 0; i < assumptions.size(); i++){
+            if (i != 0) writer.write(", ");
+            writer.write(assumptions.get(i).toString());
+        }
+        writer.write("|-" + toProve + '\n');
+    }
+
     public boolean check() throws IOException {
         readAssumptions();
+        writeAssumptions();
         boolean answer = false;
         lineNumber = 1;
         while ((line = reader.readLine()) != null){

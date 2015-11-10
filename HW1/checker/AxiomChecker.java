@@ -20,12 +20,12 @@ public class AxiomChecker {
     private void dfs(Expression Axiom, Expression expression) {
         if (!isOk) return;
         if (Axiom.getOperator() == 'v') {
-            if (!namesVector.contains(((Variable) Axiom).getName())){
-                namesVector.add(((Variable) Axiom).getName());
+            if (!namesVector.contains(((Variable) Axiom).toString())){
+                namesVector.add(((Variable) Axiom).toString());
                 expressionsVector.add(expression);
                 return;
             } else {
-                int index = namesVector.indexOf(((Variable) Axiom).getName());
+                int index = namesVector.indexOf(((Variable) Axiom).toString());
                 if (index != -1) {
                     if (expressionsVector.get(index).equals(expression)) {
                         return;
