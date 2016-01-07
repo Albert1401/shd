@@ -1,4 +1,11 @@
-"axioms.txt" must be in root directory.
+HW1:
 Enter the path to your proof file as the first argument.
-
 See the ${PATH_TO_PROOF}.log
+
+HW2:
+Enter path to your file you want to change
+See the ${PATH_TO_PROOF}.log
+
+HW3:
+Enter path to file with yout statement
+See the proof.txt

@@ -1,12 +1,16 @@
 package expression;
 
+import java.util.Map;
+
 public interface Expression {
 
-    public char getOperator();
+    char getOperator();
 
-    public boolean equals(Expression expression);
+    boolean equals(Expression expression);
 
-    public Expression getOperands(int number);
+    boolean evaluate(Map<String, Boolean> args);
 
-    public String toString();
+    Expression getOperands(int number);
+
+    String toString();
 }

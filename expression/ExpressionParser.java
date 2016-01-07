@@ -3,19 +3,18 @@ package expression;
 
 public class ExpressionParser {
 
-    private int implPriority = Integer.MAX_VALUE - 1;
-    private final int LowestPriority = Integer.MAX_VALUE;
+    private static int implPriority = Integer.MAX_VALUE - 1;
+    private static final int LowestPriority = Integer.MAX_VALUE;
+    private static int position;
 
-    private int position;
-
-    public Expression parse(String str) {
+    public static Expression parse(String str) {
         Expression answer =  solve(splitToTokens(str), LowestPriority);
         implPriority = Integer.MAX_VALUE - 1;
         position = 0;
         return answer;
     }
 
-    private Expression solve(String[] tokens, int priority){
+    private static Expression solve(String[] tokens, int priority){
         Expression answ = null;
         while (position < tokens.length) {
             if (tokens[position].equals("(") || tokens[position].equals(")")) {
@@ -43,14 +42,11 @@ public class ExpressionParser {
         return answ;
     }
 
-    private boolean isVar(char ch){
-        if(ch >= 'A' && ch <= 'z' || ch >= '0' && ch <= '9'){
-            return true;
-        }
-        return false;
+    private static boolean isVar(char ch){
+        return ch >= 'A' && ch <= 'z' || ch >= '0' && ch <= '9';
     }
 
-    private int priority(char operation){
+    private static int priority(char operation){
         if (operation == '!') return 0;
         if (operation == '&') return 1;
         if (operation == '|') return 2;
@@ -58,7 +54,7 @@ public class ExpressionParser {
         return LowestPriority;
     }
 
-    private String[] splitToTokens(String str){
+    private static String[] splitToTokens(String str){
         StringBuilder answ = new StringBuilder();
         for (int i = 0; i < str.length();) {
             if (str.charAt(i) == ' ') {
@@ -81,7 +77,7 @@ public class ExpressionParser {
         return answ.toString().split("[ ]+");
     }
 
-    private Expression give(char ch, Expression x, Expression y) {
+    private static Expression give(char ch, Expression x, Expression y) {
         switch (ch) {
             case '&':
                 return new Conjunction(x, y);

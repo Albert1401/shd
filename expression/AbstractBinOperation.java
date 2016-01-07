@@ -11,10 +11,12 @@ public abstract class AbstractBinOperation implements Expression {
         this.operator = operator;
     }
 
+    @Override
     public char getOperator(){
         return operator;
     }
 
+    @Override
     public Expression getOperands(int number){
         if (number == 1) {
             return operation1;
@@ -22,6 +24,7 @@ public abstract class AbstractBinOperation implements Expression {
         return operation2;
     }
 
+    @Override
     public boolean equals(Expression expression){
         if (operator == expression.getOperator()){
             if (this.operation1.equals(expression.getOperands(1)) &&
@@ -31,6 +34,7 @@ public abstract class AbstractBinOperation implements Expression {
         return false;
     }
 
+    @Override
     public String toString(){
         boolean is1var = operation1.getOperator() == 'v' || operation1.getOperator() == '!';
         boolean is2var = operation2.getOperator() == 'v' || operation2.getOperator() == '!';

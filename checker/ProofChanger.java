@@ -1,112 +1,57 @@
 package checker;
 
 import expression.Expression;
-import expression.ExpressionParser;
 
 import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Vector;
 
-/**
- * Created by ClitCommander on 9/28/2015.
- */
 
 public class ProofChanger {
-    private ArrayList<Expression> assumptions = new ArrayList<>();
-    private ArrayList<Expression> approved = new ArrayList<>();
-    private ExpressionParser parser = new ExpressionParser();
-    private AxiomChecker axiomChecker;
 
-    private Expression toProve;
-    private Expression mainAssumption;
+    private PatternWriter patternWriter;
+    private ProofInput input;
 
-    private WritingUtil writingUtil;
-
-
-    private BufferedReader reader;
-    private BufferedWriter writer;
-
-    public ProofChanger(String pathToAxioms, String pathToProof) throws IOException {
-        axiomChecker = new AxiomChecker(pathToAxioms);
-        reader = new BufferedReader(new FileReader(pathToProof), 8 * 1024);
-        writer = new BufferedWriter(new FileWriter(pathToProof + ".log"));
+    public ProofChanger(ProofInput input, ProofOutput output){
+        this.input = input;
+        patternWriter = new PatternWriter(output);
     }
 
+    public ProofChanger() {};
 
-    private boolean isMp(Expression expression) throws IOException {
-        for (int i = approved.size() - 1; i >= 0; i--) {
-            if (approved.get(i).getOperator() == '-') {
-                if (approved.get(i).getOperands(2).equals(expression)) {
-                    for (int j = approved.size() - 1; j >= 0; j--) {
-                        if (j != i) {
-                            if (approved.get(j).equals(approved.get(i).getOperands(1))) {
-                                writingUtil.forMP(approved.get(j), approved.get(i).getOperands(2));
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
+    public void setIO(ProofInput input, ProofOutput output) {
+        this.input = input;
+        if (patternWriter == null) {
+            patternWriter = new PatternWriter(output);
+        } else {
+            patternWriter.setProofOutput(output);
         }
-        return false;
-    }
-
-    private int isAssumption(Expression expression) {
-        for (int i = 0; i < assumptions.size(); i++) {
-            if (expression.equals(assumptions.get(i))) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-
-    private void readAssumptions() throws IOException {
-        Scanner scanner = new Scanner(reader.readLine());
-        scanner.useDelimiter(",|\\|\\-");
-
-        while (scanner.hasNext()){
-            assumptions.add(parser.parse(scanner.next()));
-        }
-        toProve = assumptions.remove(assumptions.size() - 1);
-        mainAssumption = assumptions.remove(assumptions.size() - 1);
-    }
-
-    public void writeAssumptions() throws IOException{
-        for (int i = 0; i < assumptions.size(); i++){
-            if (i != 0) writer.write(", ");
-            writer.write(assumptions.get(i).toString());
-        }
-        writer.write("|-(" + mainAssumption + ")->" + toProve + '\n');
     }
 
     public void change() throws IOException {
-        readAssumptions();
-        writeAssumptions();
-        writingUtil = new WritingUtil(writer, mainAssumption);
+        if (input == null || patternWriter == null){
+            throw new IllegalStateException("Using without setting input and output");
+        }
 
-        String line;
-        while ((line = reader.readLine()) != null) {
-            Expression expression = parser.parse(line);
-            int isAxiom = axiomChecker.isAxiom(expression);
-            int isAssumption = isAssumption(expression);
+        ArrayList<Expression> assumptions = input.getAssumptions();
+        Expression mainAssumption = input.getMainAssumption();
+        ArrayList<Expression> approved = new ArrayList<>();
 
-            if (expression.equals(mainAssumption)) {
-                writingUtil.forMainAssumption();
+        Expression expression;
+        while((expression = input.nextLine()) != null){
+            int isAxiom = Utils.isAxiom(expression);
+            int isAssumption = Utils.isAssumption(assumptions, expression);
+
+            if (expression.equals(mainAssumption)){
+                patternWriter.forMainAssumption(mainAssumption);
             } else {
-                if (isAxiom == -1 && isAssumption == -1) {
-                    isMp(expression);
+                if (isAxiom == -1 && isAssumption == -1){
+                    Utils.MP mpcheck = Utils.isModusPonens(approved, expression);
+                    patternWriter.forMP(approved.get(mpcheck.left), approved.get(mpcheck.all).getOperands(2), mainAssumption);
                 } else {
-                    writingUtil.forAxiomsAndAssumptions(expression);
+                    patternWriter.forAxiomsAndAssumptions(expression, mainAssumption);
                 }
             }
             approved.add(expression);
         }
-        writer.close();
     }
 }
