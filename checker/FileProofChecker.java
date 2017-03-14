@@ -1,6 +1,5 @@
 package checker;
 
-import com.sun.istack.internal.Nullable;
 import expression.Expression;
 import expression.ExpressionParser;
 
@@ -20,7 +19,7 @@ public class FileProofChecker {
     private PrintStream logStream;
 
 
-    public FileProofChecker(String path, @Nullable PrintStream logStream) throws IOException {
+    public FileProofChecker(String path, PrintStream logStream) throws IOException {
         this.logStream = logStream;
         reader = new BufferedReader(new FileReader(path), 8 * 1024);
         writer = new BufferedWriter(new FileWriter(path + ".log"));
