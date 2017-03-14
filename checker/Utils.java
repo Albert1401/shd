@@ -95,6 +95,7 @@ public final class Utils {
 
     public static Head readHead(String s){
         Scanner scanner = new Scanner(s);
+        scanner.useDelimiter("(\\|\\-)|\\,");
         ArrayList<Expression> assumptions = new ArrayList<>();
         Expression toProve;
 

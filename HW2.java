@@ -3,6 +3,7 @@ import checker.ProofInput;
 import checker.Utils;
 import expression.Expression;
 import expression.ExpressionParser;
+import expression.Implication;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -18,8 +19,13 @@ public class HW2 {
 
                 Utils.Head head = Utils.readHead(reader.readLine());
                 Expression mainAssumption = head.assumptions.remove(head.assumptions.size() - 1);
-
-
+                for (int i = 0; i < head.assumptions.size(); i++) {
+                    if (i != 0) writer.write(",");
+                    writer.write(head.assumptions.get(i).toString());
+                }
+                writer.write("|-");
+                writer.write(new Implication(mainAssumption, head.toProve).toString());
+                writer.newLine();
                 new ProofChanger(new ProofInput() {
                     @Override
                     public Expression nextLine() throws IOException {

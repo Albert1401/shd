@@ -34,41 +34,41 @@ public class PatternWriter {
         patterns.add(ExpressionParser.parse("A->C"));
 
         CONJ[0] = patterns.size();
-        read("asd/conj/00");
+        read("patterns/conj/00");
         CONJ[1] = patterns.size();
-        read("asd/conj/01");
+        read("patterns/conj/01");
         CONJ[2] = patterns.size();
-        read("asd/conj/10");
+        read("patterns/conj/10");
         CONJ[3] = patterns.size();
-        read("asd/conj/11");
+        read("patterns/conj/11");
 
         DISJ[0] = patterns.size();
-        read("asd/disj/00");
+        read("patterns/disj/00");
         DISJ[1] = patterns.size();
-        read("asd/disj/01");
+        read("patterns/disj/01");
         DISJ[2] = patterns.size();
-        read("asd/disj/10");
+        read("patterns/disj/10");
         DISJ[3] = patterns.size();
-        read("asd/disj/11");
+        read("patterns/disj/11");
 
         IMPL[0] = patterns.size();
-        read("asd/impl/00");
+        read("patterns/impl/00");
         IMPL[1] = patterns.size();
-        read("asd/impl/01");
+        read("patterns/impl/01");
         IMPL[2] = patterns.size();
-        read("asd/impl/10");
+        read("patterns/impl/10");
         IMPL[3] = patterns.size();
-        read("asd/impl/11");
+        read("patterns/impl/11");
 
         NEG[0] = patterns.size();
-        read("asd/neg/0");
+        read("patterns/neg/0");
         NEG[1] = patterns.size();
-        read("asd/neg/1");
+        read("patterns/neg/1");
 
         HELP1[0] = patterns.size();
-        read("asd/help/1");
+        read("patterns/help/1");
         HELP2[0] = patterns.size();
-        read("asd/help/2");
+        read("patterns/help/2");
     }
 
     private static void read(String path) {
